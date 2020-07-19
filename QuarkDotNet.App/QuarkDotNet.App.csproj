@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="connected.ico" />
+    <None Remove="disconnected.ico" />
+    <None Remove="favicon.ico" />
+    <None Remove="Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuarkDotNet.Core\QuarkDotNet.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="connected.ico" />
+    <Resource Include="disconnected.ico" />
+  </ItemGroup>
+
+</Project>
