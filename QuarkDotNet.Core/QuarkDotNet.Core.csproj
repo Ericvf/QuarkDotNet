@@ -1,11 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Configurations>Debug;Release;Release_ARM32</Configurations>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="4.7.2" />
+	</ItemGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="LibUsbDotNet" Version="3.0.81-alpha" />
-  </ItemGroup>
-
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'!='Release_ARM32|AnyCPU'">
+		<PackageReference Include="LibUsbDotNet" Version="3.0.81-alpha" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release_ARM32|AnyCPU'">
+	  <Reference Include="LibUsbDotNet">
+	    <HintPath>..\lib\linux-arm\LibUsbDotNet.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 </Project>

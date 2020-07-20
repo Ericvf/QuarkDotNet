@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -17,7 +18,17 @@ namespace QuarkDotNet
 
         public int GetDriveCount() => drives.Count();
 
+        public long GetFileSize(string file)
+        {
+            var fileInfo = new FileInfo(file);
+            return fileInfo.Exists
+                ? fileInfo.Length
+                : 0;
+        }
+
         public IEnumerable<string> GetFiles(string path) => Directory.GetFiles(path);
+
+        public IEnumerable<string> GetAllFiles(string path, string pattern) => Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
 
         public int GetFileCount(string path) => GetFiles(path).Count();
 
@@ -27,6 +38,6 @@ namespace QuarkDotNet
 
         public int GetDirectoryCount(string path) => GetDirectories(path).Count();
 
-        public string GetDirectoryName(string directoryPath) => Path.GetDirectoryName(directoryPath);
+        public string GetDirectoryName(string directoryPath) => new DirectoryInfo(directoryPath).Name;
     }
 }

@@ -18,6 +18,7 @@ namespace QuarkDotNet
                 .AddSingleton<GoldleafClient>()
                 .AddSingleton<UsbDeviceService>()
                 .AddSingleton<FileSystem>()
+                .AddSingleton<Settings>()
                 .AddSingleton<ILogger, ConsoleLogger>()
                 .BuildServiceProvider();
     }

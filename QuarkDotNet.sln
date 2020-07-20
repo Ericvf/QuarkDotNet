@@ -11,18 +11,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuarkDotNet.Cli", "QuarkDot
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		ARM|Any CPU = ARM|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.ARM|Any CPU.ActiveCfg = ARM|Any CPU
+		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.ARM|Any CPU.Build.0 = ARM|Any CPU
 		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDE0FB1C-8047-482A-A285-1D6E9FA32032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.ARM|Any CPU.ActiveCfg = Release_ARM32|Any CPU
+		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.ARM|Any CPU.Build.0 = Release_ARM32|Any CPU
 		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD8508C-2F6E-4472-9669-2E43183C4F98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F6D9B8-9192-493D-BD94-950446C609CD}.ARM|Any CPU.ActiveCfg = ARM|Any CPU
+		{F7F6D9B8-9192-493D-BD94-950446C609CD}.ARM|Any CPU.Build.0 = ARM|Any CPU
 		{F7F6D9B8-9192-493D-BD94-950446C609CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7F6D9B8-9192-493D-BD94-950446C609CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7F6D9B8-9192-493D-BD94-950446C609CD}.Release|Any CPU.ActiveCfg = Release|Any CPU

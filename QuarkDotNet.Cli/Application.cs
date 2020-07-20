@@ -13,6 +13,8 @@ namespace QuarkDotNet
 
         public void Run(string[] args)
         {
+            Console.WriteLine("QuarkDotNet started");
+
             goldleafClient.Start();
 
             Console.ReadLine();

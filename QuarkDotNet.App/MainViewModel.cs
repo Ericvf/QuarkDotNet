@@ -1,14 +1,13 @@
-﻿using System;
+﻿using QuarkDotNet.Core;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Channels;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using QuarkDotNet.Core;
 
 namespace QuarkDotNet.App
 {
@@ -17,8 +16,22 @@ namespace QuarkDotNet.App
         static readonly ImageSource connectedIcon = new BitmapImage(new Uri("pack://application:,,,/connected.ico"));
         static readonly ImageSource disconnectedIcon = new BitmapImage(new Uri("pack://application:,,,/disconnected.ico"));
         static readonly ObservableCollection<string> logHistory = new ObservableCollection<string>();
-        
+        private readonly ObservableCollection<string> resourceFiles = new ObservableCollection<string>();
+
+        private readonly Settings settings;
+        private readonly FileSystem fileSystem;
+        private readonly NspParser nspParser;
+
         public ObservableCollection<string> LogHistory => logHistory;
+
+        public ObservableCollection<string> ResourceFiles => resourceFiles;
+
+        public MainViewModel(Settings settings, FileSystem fileSystem, NspParser nspParser)
+        {
+            this.settings = settings;
+            this.fileSystem = fileSystem;
+            this.nspParser = nspParser;
+        }
 
         #region Properties
 
@@ -68,6 +81,20 @@ namespace QuarkDotNet.App
         private ImageSource _Image;
         public const string ImagePropertyName = "Image";
 
+        public bool IsLogVisible
+        {
+            get { return _IsLogVisible; }
+            set
+            {
+                if (_IsLogVisible != value)
+                {
+                    _IsLogVisible = value;
+                    OnPropertyChanged(IsLogVisiblePropertyName);
+                }
+            }
+        }
+        private bool _IsLogVisible;
+        public const string IsLogVisiblePropertyName = "IsLogVisible";
         #endregion
 
         #region Commands 
@@ -91,6 +118,25 @@ namespace QuarkDotNet.App
 
         public void GoldLeafClientStateChange(object sender, GoldleafClient.State e)
             => IsConnected = e.IsConnected;
+
+        public void Load()
+        {
+            var model = settings.Get();
+            IsLogVisible = model.IsLogVisible;
+
+            var nspFiles =
+                from path in model.Paths
+                from file in fileSystem.GetAllFiles(path, "*.*")
+                where file.EndsWith(".nsp", StringComparison.OrdinalIgnoreCase)
+                let nspModel = nspParser.Parse(file)
+                select nspModel;
+
+            ResourceFiles.Clear();
+            foreach (var nspModel in nspFiles)
+            {
+                ResourceFiles.Add($"{nspModel.Name} ({nspModel.Size})");
+            }
+        }
 
         public void Add(string message)
         {
@@ -117,18 +163,7 @@ namespace QuarkDotNet.App
         void GoldLeafClientStateChange(object sender, GoldleafClient.State e);
 
         void Add(string message);
-    }
 
-    public class ViewModelLogger : ILogger
-    {
-        private readonly IMainViewModel mainViewModel;
-
-        public ViewModelLogger(IMainViewModel mainViewModel) => this.mainViewModel = mainViewModel;
-
-        public void Debug(string message) => mainViewModel.Add(message);
-
-        public void Print(string message) => mainViewModel.Add(message);
-
-        public void Error(string message) => mainViewModel.Add(message);
+        void Load();
     }
 }

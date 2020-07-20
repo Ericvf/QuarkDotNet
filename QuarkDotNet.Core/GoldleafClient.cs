@@ -16,6 +16,7 @@ namespace QuarkDotNet
         private readonly UsbDeviceService usbDeviceService;
         private readonly ILogger logger;
         private readonly FileSystem fileSystem;
+        private readonly Settings settings;
         public static int BlockSize = 0x1000;
         private const int VendorId = 0x057E;
         private const int ProductId = 0x3000;
@@ -29,12 +30,12 @@ namespace QuarkDotNet
         FileStream readfile = null;
         FileStream writefile = null;
 
-        public GoldleafClient(UsbDeviceService usbDeviceService, ILogger logger, FileSystem fileSystem)
+        public GoldleafClient(UsbDeviceService usbDeviceService, ILogger logger, FileSystem fileSystem, Settings settings)
         {
             this.usbDeviceService = usbDeviceService;
             this.logger = logger;
             this.fileSystem = fileSystem;
-
+            this.settings = settings;
             commandHandlers = new Dictionary<CommandIds, CommandHandler>()
             {
                 { CommandIds.GetDriveCount, GetDriveCount },
@@ -153,19 +154,32 @@ namespace QuarkDotNet
 
         private IEnumerable<byte[]> GetSpecialPath(CommandBlock commandBlock)
         {
-            logger.Print($"GetSpecialPath: {1}");
+            var idx = commandBlock.read32();
+
+            var settingsModel = settings.Get();
+
+            var path = idx < settingsModel.Paths?.Count()
+                ? settingsModel.Paths.ElementAt(idx)
+                : throw new Exception();
+
+            var directoryName = fileSystem.GetDirectoryName(path);
+            logger.Print($"GetSpecialPath: {path}");
+
             commandBlock.responseStart();
-            commandBlock.writeString("Switch Roms");
-            commandBlock.writeString("e:\\switch roms");
+            commandBlock.writeString(directoryName);
+            commandBlock.writeString(path);
             yield return commandBlock.responseEnd();
         }
 
         private IEnumerable<byte[]> GetSpecialPathCount(CommandBlock commandBlock)
         {
-            logger.Print($"GetSpecialPathCount: {2}");
+            var settingsModel = settings.Get();
+            var pathCount = settingsModel.Paths?.Count() ?? 0;
+
+            logger.Print($"GetSpecialPathCount: {pathCount}");
 
             commandBlock.responseStart();
-            commandBlock.write32(2);
+            commandBlock.write32(pathCount);
             yield return commandBlock.responseEnd();
         }
 
@@ -263,8 +277,7 @@ namespace QuarkDotNet
             if (idx < directories.Count())
             {
                 var directoryPath = directories.ElementAt(idx);
-                var directoryInfo = new DirectoryInfo(directoryPath);
-                var directoryName = directoryInfo.Name;
+                var directoryName = fileSystem.GetDirectoryName(directoryPath);
 
                 logger.Print($"GetDirectory: {directoryName}");
 

@@ -9,7 +9,10 @@ namespace QuarkDotNet.App
         {
             DataContext = mainViewModel;
 
-            Loaded += (s,e) => goldLeafClient.Start();
+            Loaded += (s, e) => {
+                goldLeafClient.Start();
+                mainViewModel.Load();
+            };
             Closing += (s, e) => goldLeafClient.Stop();
 
             goldLeafClient.StateChange += mainViewModel.GoldLeafClientStateChange;
